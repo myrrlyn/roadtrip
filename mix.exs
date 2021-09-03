@@ -7,7 +7,16 @@ defmodule Roadtrip.Umbrella.MixProject do
       version: "0.1.0",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      aliases: aliases()
+      aliases: aliases(),
+
+      # Documentation
+      name: "Roadtrip",
+      source_url: "https://github.com/myrrlyn/roadtrip",
+      homepage_url: "https://drive.myrrlyn.net",
+      docs: [
+        main: "RoadtripWeb",
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -24,7 +33,10 @@ defmodule Roadtrip.Umbrella.MixProject do
   # Dependencies listed here are available only for this project
   # and cannot be accessed from applications inside the apps/ folder.
   defp deps do
-    []
+    [
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.25", only: [:dev], runtime: false}
+    ]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
