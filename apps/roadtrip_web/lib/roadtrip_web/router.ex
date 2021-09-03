@@ -18,6 +18,9 @@ defmodule RoadtripWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    # Route to vehicles by their VIN, not by their database ID.
+    resources "/vehicles", VehicleController, param: "vin"
   end
 
   # Other scopes may use custom stacks.

@@ -1,0 +1,35 @@
+<h1>Show Vehicle</h1>
+
+<ul>
+
+  <%= if @vehicle.name do %>
+    <li>
+      <strong>Name:</strong>
+      <%= @vehicle.name %>
+    </li>
+  <% end %>
+
+  <li>
+    <strong>Make:</strong>
+    <%= @vehicle.make %>
+  </li>
+
+  <li>
+    <strong>Model:</strong>
+    <%= @vehicle.model %>
+  </li>
+
+  <li>
+    <strong>Year:</strong>
+    <%= @vehicle.year %>
+  </li>
+
+  <li>
+    <strong>VIN:</strong>
+    <%= @vehicle.vin %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.vehicle_path(@conn, :edit, @vehicle) %></span> |
+<span><%= link "Back", to: Routes.vehicle_path(@conn, :index) %></span>

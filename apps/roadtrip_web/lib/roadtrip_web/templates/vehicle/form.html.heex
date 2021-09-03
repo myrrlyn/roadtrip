@@ -1,0 +1,38 @@
+<.form let={f} for={@changeset}, action={@action}>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <%= label f, :name %>
+  <small>(optional)</small>
+  <%= text_input f, :name %>
+  <%= error_tag f, :name %>
+
+  <%= label f, :make %>
+  <%= text_input f, :make %>
+  <%= error_tag f, :make %>
+
+  <%= label f, :model %>
+  <%= text_input f, :model %>
+  <%= error_tag f, :model %>
+
+  <%= label f, :year %>
+  <%# Use of the `\d` or `[0-9]` pattern allows a mobile user agent to render %>
+  <%# a 10-digit software keyboard. %>
+  <%= number_input f, :year, pattern: "\\d{4}" %>
+  <%= error_tag f, :year %>
+
+  <%= label f, :vin, "VIN" %>
+  <small>
+    North American VINs are 17 alphanumeric digits, except for I, O, and Q. This
+    is not case-sensitive.
+  </small>
+  <%= text_input f, :vin, pattern: Roadtrip.Garage.Vin.html_input_pattern() %>
+  <%= error_tag f, :vin %>
+
+  <div>
+    <%= submit "Save" %>
+  </div>
+</.form>
