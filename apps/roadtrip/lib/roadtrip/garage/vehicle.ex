@@ -6,7 +6,7 @@ defmodule Roadtrip.Garage.Vehicle do
   context to, a series of odometer, fuel, and maintenance measurements.
   """
 
-  use Ecto.Schema
+  use Roadtrip.Schema
   import Ecto.Changeset
 
   schema "vehicles" do

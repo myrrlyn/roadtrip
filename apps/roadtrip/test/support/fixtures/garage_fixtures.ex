@@ -5,11 +5,24 @@ defmodule Roadtrip.GarageFixtures do
   """
 
   @doc """
-  Generate a unique vehicle vin.
+  Generate a unique vin.
+
+  33 ** 6 is just over 2 ** 30. By the time this overflows, you have other
+  problems.
   """
   def unique_vin() do
     seq =
-      System.unique_integer([:positive, :monotonic]) |> to_string() |> String.pad_leading(6, "0")
+      System.unique_integer([:positive])
+      |> Integer.to_string(33)
+      |> String.replace(~r/[IOQ]/, fn char ->
+        case char do
+          "I" -> "X"
+          "O" -> "Y"
+          "Q" -> "Z"
+        end
+      end)
+      |> String.pad_leading(6, "0")
+      |> String.slice(0..5)
 
     pfx = "1G3WH52M0VF"
     (pfx <> seq) |> Roadtrip.Garage.Vin.write_na_checksum()
