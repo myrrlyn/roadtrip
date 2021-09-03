@@ -29,7 +29,24 @@ defmodule Roadtrip.Garage.Vehicle do
     # American VIN) and now.
     |> validate_number(:year,
       greater_than_or_equal_to: 1954,
-      less_than_or_equal_to: DateTime.utc_now().year
+      message: "Vehicles older than the North American VIN are currently unsupported"
+    )
+    |> validate_number(:year,
+      less_than_or_equal_to: DateTime.utc_now().year,
+      message: "Your vehicle cannot be from the future"
+    )
+    # Name, Make, and Model are all limited to 32 bytes in the database
+    |> validate_length(:name,
+      max: 32,
+      message: "This is currently required to be no more than 32 bytes"
+    )
+    |> validate_length(:make,
+      max: 32,
+      message: "This is currently required to be no more than 32 bytes"
+    )
+    |> validate_length(:model,
+      max: 32,
+      message: "This is currently required to be no more than 32 bytes"
     )
     # Uppercase the VIN
     |> update_change(:vin, &String.upcase/1)
