@@ -20,8 +20,9 @@
 
   <%= label f, :year %>
   <%# Use of the `\d` or `[0-9]` pattern allows a mobile user agent to render %>
-  <%# a 10-digit software keyboard. %>
-  <%= number_input f, :year, pattern: "\\d{4}" %>
+  <%# a 10-digit software keyboard. The `*` is load-bearing; changing it to %>
+  <%# `{4}` breaks the effect. %>
+  <%= number_input f, :year, pattern: "\\d*" %>
   <%= error_tag f, :year %>
 
   <%= label f, :vin, "VIN" %>
