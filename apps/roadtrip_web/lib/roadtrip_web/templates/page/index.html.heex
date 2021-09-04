@@ -8,16 +8,13 @@
     <h2>Features</h2>
     <ul>
       <li>
-        None, I just started (re-) building it.
+        Manage cars
       </li>
     </ul>
   </article>
   <article class="column">
     <h2>Goals</h2>
     <ul>
-      <li>
-        Manage cars
-      </li>
       <li>
         Record usage of cars
       </li>
@@ -36,7 +33,7 @@
     <h2>Sections</h2>
     <ul>
       <li>
-        <a href={Routes.vehicle_path(@conn, :index)}>Vehicles</a>
+        <%= link "Vehicles", to: Routes.vehicle_path(@conn, :index) %>
       </li>
     </ul>
   </article>

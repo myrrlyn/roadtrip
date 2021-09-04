@@ -1,0 +1,7 @@
+<h1>New Measurement</h1>
+
+<p>for <%= @vehicle |> Roadtrip.Garage.Vehicle.show_name() %></p>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.vehicle_measurement_path(@conn, :create, @vehicle)) %>
+
+<span><%= link "Back", to: Routes.vehicle_measurement_path(@conn, :index, @vehicle) %></span>

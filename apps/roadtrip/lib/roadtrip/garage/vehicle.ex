@@ -8,6 +8,7 @@ defmodule Roadtrip.Garage.Vehicle do
 
   use Roadtrip.Schema
   import Ecto.Changeset
+  alias Roadtrip.Garage.Measurement
 
   schema "vehicles" do
     field :make, :string
@@ -15,6 +16,8 @@ defmodule Roadtrip.Garage.Vehicle do
     field :name, :string
     field :vin, :string
     field :year, :integer
+
+    has_many :measurements, Measurement
 
     timestamps()
   end

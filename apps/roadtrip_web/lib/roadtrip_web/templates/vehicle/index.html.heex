@@ -1,5 +1,9 @@
 <h1>Listing Vehicles</h1>
 
+<p>
+  Vehicles are ordered by name, then by VIN.
+</p>
+
 <table>
   <thead>
     <tr>
@@ -10,24 +14,26 @@
       <th>VIN</th>
 
       <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
-<%= for vehicle <- @vehicles do %>
-    <tr>
-      <td><%= vehicle.name %></td>
-      <td><%= vehicle.make %></td>
-      <td><%= vehicle.model %></td>
-      <td><%= vehicle.year %></td>
-      <td><%= vehicle.vin %></td>
+    <%= for vehicle <- @vehicles do %>
+      <tr>
+        <td><%= vehicle.name %></td>
+        <td><%= vehicle.make %></td>
+        <td><%= vehicle.model %></td>
+        <td><%= vehicle.year %></td>
+        <td><%= vehicle.vin %></td>
 
-      <td>
-        <span><%= link "Show", to: Routes.vehicle_path(@conn, :show, vehicle) %></span>
-        <span><%= link "Edit", to: Routes.vehicle_path(@conn, :edit, vehicle) %></span>
-        <span><%= link "Delete", to: Routes.vehicle_path(@conn, :delete, vehicle), method: :delete, data: [confirm: "Are you sure?"] %></span>
-      </td>
-    </tr>
-<% end %>
+        <td><%= link "History", to: Routes.vehicle_measurement_path(@conn, :index, vehicle) %></td>
+        <td>
+          <span><%= link "Show", to: Routes.vehicle_path(@conn, :show, vehicle) %></span>
+          <span><%= link "Edit", to: Routes.vehicle_path(@conn, :edit, vehicle) %></span>
+          <span><%= link "Delete", to: Routes.vehicle_path(@conn, :delete, vehicle), method: :delete, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
 

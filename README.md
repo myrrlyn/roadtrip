@@ -22,10 +22,10 @@ instance as appropriate.
 ## Features
 
 - The system can describe vehicles
+- The system can describe measurements for vehicles
 
 ## Roadmap
 
-1. Add a `Measurement` record attached to `Vehicle`s
 1. Extend `Measurement` with `Refuel` and `Maintenance` attachments
 1. Extend `Measurement` with location attachments
 1. Create query systems for `Measurements`, like fuel or maintenance forecast

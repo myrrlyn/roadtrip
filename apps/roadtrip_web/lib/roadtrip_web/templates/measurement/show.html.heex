@@ -1,0 +1,23 @@
+<h1>Show Measurement</h1>
+
+<ul>
+
+  <li>
+    <strong>Vehicle:</strong>
+    <%= link @vehicle |> Roadtrip.Garage.Vehicle.show_name(), to: Routes.vehicle_path(@conn, :show, @vehicle) %>
+  </li>
+
+  <li>
+    <strong>Odometer:</strong>
+    <%= @measurement.odometer %>
+  </li>
+
+  <li>
+    <strong>Moment:</strong>
+    <%= @measurement.moment %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.vehicle_measurement_path(@conn, :edit, @vehicle, @measurement) %></span> |
+<span><%= link "Back", to: Routes.vehicle_measurement_path(@conn, :index, @vehicle) %></span>

@@ -6,12 +6,12 @@ defmodule RoadtripWeb.VehicleController do
 
   def index(conn, _params) do
     vehicles = Garage.list_vehicles()
-    render(conn, "index.html", vehicles: vehicles)
+    conn |> render("index.html", vehicles: vehicles)
   end
 
   def new(conn, _params) do
     changeset = Garage.change_vehicle(%Vehicle{})
-    render(conn, "new.html", changeset: changeset)
+    conn |> render("new.html", changeset: changeset)
   end
 
   def create(conn, %{"vehicle" => vehicle_params}) do
@@ -22,19 +22,19 @@ defmodule RoadtripWeb.VehicleController do
         |> redirect(to: Routes.vehicle_path(conn, :show, vehicle))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        conn |> render("new.html", changeset: changeset)
     end
   end
 
   def show(conn, %{"vin" => vin}) do
     vehicle = Garage.get_vehicle_by_vin!(vin)
-    render(conn, "show.html", vehicle: vehicle)
+    conn |> render("show.html", vehicle: vehicle)
   end
 
   def edit(conn, %{"vin" => vin}) do
     vehicle = Garage.get_vehicle_by_vin!(vin)
     changeset = Garage.change_vehicle(vehicle)
-    render(conn, "edit.html", vehicle: vehicle, changeset: changeset)
+    conn |> render("edit.html", vehicle: vehicle, changeset: changeset)
   end
 
   def update(conn, %{"vin" => vin, "vehicle" => vehicle_params}) do
@@ -47,7 +47,7 @@ defmodule RoadtripWeb.VehicleController do
         |> redirect(to: Routes.vehicle_path(conn, :show, vehicle))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", vehicle: vehicle, changeset: changeset)
+        conn |> render("edit.html", vehicle: vehicle, changeset: changeset)
     end
   end
 

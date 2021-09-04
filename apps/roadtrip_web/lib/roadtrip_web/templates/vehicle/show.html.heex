@@ -29,6 +29,10 @@
     <%= @vehicle.vin %>
   </li>
 
+  <li>
+    <%= link "History", to: Routes.vehicle_measurement_path(@conn, :index, @vehicle) %>
+  </li>
+
 </ul>
 
 <span><%= link "Edit", to: Routes.vehicle_path(@conn, :edit, @vehicle) %></span> |

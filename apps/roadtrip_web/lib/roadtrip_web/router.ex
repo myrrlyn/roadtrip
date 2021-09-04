@@ -20,7 +20,9 @@ defmodule RoadtripWeb.Router do
     get "/", PageController, :index
 
     # Route to vehicles by their VIN, not by their database ID.
-    resources "/vehicles", VehicleController, param: "vin"
+    resources "/vehicles", VehicleController, param: "vin" do
+      resources "/log", MeasurementController, param: "moment"
+    end
   end
 
   # Other scopes may use custom stacks.
