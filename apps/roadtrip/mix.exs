@@ -42,7 +42,8 @@ defmodule Roadtrip.MixProject do
       {:jason, "~> 1.2"},
       {:swoosh, "~> 1.3"},
       {:timex, "~> 3.7"},
-      {:number, "~> 1.0"}
+      {:number, "~> 1.0"},
+      {:csv, "~> 2.4"}
     ]
   end
 
@@ -54,7 +55,9 @@ defmodule Roadtrip.MixProject do
       setup: ["deps.get", "ecto.setup"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      # Reset and seed the database.
+      "ecto.seed": ["ecto.reset", "run priv/repo/seeds.exs"]
     ]
   end
 end
