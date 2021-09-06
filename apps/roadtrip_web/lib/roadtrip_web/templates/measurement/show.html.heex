@@ -8,16 +8,16 @@
   </li>
 
   <li>
-    <strong>Odometer:</strong>
-    <%= @measurement.odometer %>
+    <strong>Moment:</strong>
+    <%= @measurement |> Roadtrip.Garage.Measurement.show_moment() %>
   </li>
 
   <li>
-    <strong>Moment:</strong>
-    <%= @measurement.moment %>
+    <strong>Odometer:</strong>
+    <%= @measurement |> Roadtrip.Garage.Measurement.show_odometer() %>
   </li>
 
 </ul>
 
-<span><%= link "Edit", to: Routes.vehicle_measurement_path(@conn, :edit, @vehicle, @measurement) %></span> |
-<span><%= link "Back", to: Routes.vehicle_measurement_path(@conn, :index, @vehicle) %></span>
+<span><%= link "Edit", to: @conn |> Routes.vehicle_measurement_path(:edit, @vehicle, @measurement) %></span> |
+<span><%= link "Back", to: @conn |> Routes.vehicle_measurement_path(:index, @vehicle) %></span>

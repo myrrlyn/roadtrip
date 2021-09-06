@@ -84,6 +84,44 @@ defmodule RoadtripWeb.MeasurementController do
     |> redirect(to: Routes.vehicle_measurement_path(conn, :index, vehicle))
   end
 
+  @doc """
+  Renders the page to upload a batch collection of odometer measurements.
+  """
+  def batch_upload_form(conn, %{"vehicle_vin" => vin}) do
+    vehicle = Garage.get_vehicle_by_vin!(vin)
+    conn |> render("batch.html", vehicle: vehicle)
+  end
+
+  @doc """
+  Processes a CSV batch of `Measurement` records.
+
+  Duplicate this function with other `content_type:` values for other filetypes.
+
+  ## CSV Format
+
+  See `Measurement.parse_csv_row/1`.
+  """
+  def batch_upload(
+        conn,
+        %{
+          "vehicle_vin" => vin,
+          "upload" => %{
+            "file" => %Plug.Upload{path: path, content_type: "text/csv"}
+          }
+        }
+      ) do
+    vehicle = Garage.get_vehicle_by_vin!(vin)
+
+    path
+    |> File.stream!()
+    |> CSV.decode(headers: true)
+    |> Stream.map(fn {:ok, row} -> row end)
+    |> Stream.map(&Measurement.parse_csv_row/1)
+    |> Garage.batch_create_measurements(vehicle)
+
+    conn |> redirect(to: Routes.vehicle_measurement_path(conn, :index, vehicle))
+  end
+
   # Since `Phoenix.Param.to_param` replaces `:` with `-`, this turns the param
   # back into a usable `DateTime`.
   @spec from_param(String.t()) :: DateTime.t()

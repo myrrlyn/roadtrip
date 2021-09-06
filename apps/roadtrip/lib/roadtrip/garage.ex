@@ -135,6 +135,36 @@ defmodule Roadtrip.Garage do
   end
 
   @doc """
+  Insert many objects into the database at once.
+
+  This uses `Ecto.Repo.insert_all/2`, which does *not* operate on
+  `Ecto.Changeset` structures. As such, this takes an `Enumerable` that yields
+  maps with attributes `%{moment: DateTimet.(), odometer: integer()}`, instead
+  of a well-formed `Changeset` produced by `change_measurement/2`.
+
+  ## Parameters
+
+  - any `Enumerable` that yields `%{moment: DateTime.t(), odometer: integer()}`
+  - the `Vehicle` record that owns the batch of measurements
+  """
+  @spec batch_create_measurements(Enumerable.t(), %Vehicle{}) :: {nil, any}
+  def batch_create_measurements(seq, %Vehicle{id: vid}) do
+    now = DateTime.utc_now() |> DateTime.to_naive()
+
+    seq =
+      seq
+      |> Stream.map(
+        &(&1
+          |> Map.put(:vehicle_id, vid)
+          |> Map.put(:created_at, now)
+          |> Map.put(:updated_at, now))
+      )
+      |> Enum.to_list()
+
+    Measurement |> Repo.insert_all(seq)
+  end
+
+  @doc """
   Updates a measurement.
   """
   def update_measurement(%Measurement{} = measurement, attrs) do

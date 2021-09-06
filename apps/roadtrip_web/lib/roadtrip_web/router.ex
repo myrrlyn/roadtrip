@@ -22,6 +22,9 @@ defmodule RoadtripWeb.Router do
     # Route to vehicles by their VIN, not by their database ID.
     resources "/vehicles", VehicleController, param: "vin" do
       resources "/log", MeasurementController, param: "moment"
+
+      get "/batch_load", MeasurementController, :batch_upload_form
+      post "/batch_load", MeasurementController, :batch_upload
     end
   end
 

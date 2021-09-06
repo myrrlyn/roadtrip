@@ -14,17 +14,24 @@
   <tbody>
     <%= for measurement <- @measurements do %>
       <tr>
-        <td><%= measurement.moment %></td>
-        <td><%= measurement.odometer %></td>
+        <td><%= measurement |> Roadtrip.Garage.Measurement.show_moment() %></td>
+        <td class="text-right"><%= measurement |> Roadtrip.Garage.Measurement.show_odometer() %></td>
 
         <td>
-          <span><%= link "Show", to: Routes.vehicle_measurement_path(@conn, :show, @vehicle, measurement) %></span>
-          <span><%= link "Edit", to: Routes.vehicle_measurement_path(@conn, :edit, @vehicle, measurement) %></span>
-          <span><%= link "Delete", to: Routes.vehicle_measurement_path(@conn, :delete, @vehicle, measurement), method: :delete, data: [confirm: "Are you sure?"] %></span>
+          <span><%= link "Show", to: @conn |> Routes.vehicle_measurement_path(:show, @vehicle, measurement) %></span>
+          <span><%= link "Edit", to: @conn |> Routes.vehicle_measurement_path(:edit, @vehicle, measurement) %></span>
+          <span><%= link "Delete", to: @conn |> Routes.vehicle_measurement_path(:delete, @vehicle, measurement), method: :delete, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<span><%= link "New Measurement", to: Routes.vehicle_measurement_path(@conn, :new, @vehicle) %></span>
+<span><%= link "New Measurement", to: @conn |> Routes.vehicle_measurement_path(:new, @vehicle) %></span>
+| <span><%= link "Upload CSV", to: @conn |> Routes.vehicle_measurement_path(:batch_upload_form, @vehicle) %></span>
+
+<style type="text/css">
+.text-right {
+  text-align: right;
+}
+</style>

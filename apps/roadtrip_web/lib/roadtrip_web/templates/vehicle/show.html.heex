@@ -30,10 +30,14 @@
   </li>
 
   <li>
-    <%= link "History", to: Routes.vehicle_measurement_path(@conn, :index, @vehicle) %>
+    <%= link "History", to: @conn |> Routes.vehicle_measurement_path(:index, @vehicle) %>
+  </li>
+
+  <li>
+    <%= link "Batch Upload", to: @conn |> Routes.vehicle_measurement_path(:batch_upload_form, @vehicle) %>
   </li>
 
 </ul>
 
-<span><%= link "Edit", to: Routes.vehicle_path(@conn, :edit, @vehicle) %></span> |
-<span><%= link "Back", to: Routes.vehicle_path(@conn, :index) %></span>
+<span><%= link "Edit", to: @conn |> Routes.vehicle_path(:edit, @vehicle) %></span> |
+<span><%= link "Back", to: @conn |> Routes.vehicle_path(:index) %></span>

@@ -1,0 +1,28 @@
+<h1>Odometer Bulk Upload</h1>
+
+<h2>For <%= @vehicle |> Roadtrip.Garage.Vehicle.show_name() %></h2>
+
+<p>Upload a CSV file containing existing vehicle-history records here.</p>
+
+<p>The CSV file must have the following columns:</p>
+
+<ul>
+  <li>
+    <strong>Date</strong>:
+    A datetime in the format `YYYY-MM-DD hh:mm`. The parser currently does not
+    look for a timezone marker, and interprets them as UTC.
+  </li>
+  <li>
+    <strong>Odometer</strong>:
+    An integer. Tenths-of-a-mile (or kilometer) are not currently supported.
+  </li>
+</ul>
+
+<.form let={f} for={:upload}, multipart>
+  <%= label f, :file, "Batch measurement file" %>
+  <%= file_input f, :file %>
+
+  <div>
+    <%= submit "Upload" %>
+  </div>
+</.form>
