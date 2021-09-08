@@ -47,18 +47,19 @@ defmodule Roadtrip.GarageFixtures do
   end
 
   @doc """
-  Generate a measurement. You must provide a `vehicle_id: integer()` argument
-  (to an existing row in `vehicles`) so that the returned `Measurement` is
+  Generate a measurement. You must provide a `vehicle: %Vehicle{}` argument (to
+  an existing row in `vehicles`) so that the returned `Measurement` is
   well-formed.
   """
-  def measurement_fixture(attrs \\ %{}) do
-    {:ok, measurement} =
+  def measurement_fixture(%Roadtrip.Garage.Vehicle{} = vehicle, attrs \\ %{}) do
+    attrs =
       attrs
       |> Enum.into(%{
         moment: ~U[2021-09-02 15:18:00Z],
         odometer: 42
       })
-      |> Roadtrip.Garage.create_measurement()
+
+    {:ok, measurement} = Roadtrip.Garage.create_measurement(vehicle, attrs)
 
     measurement
   end

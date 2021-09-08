@@ -18,7 +18,7 @@ defmodule RoadtripWeb.MeasurementController do
   def create(conn, %{"vehicle_vin" => vin, "measurement" => measurement_params}) do
     vehicle = Garage.get_vehicle_by_vin!(vin)
 
-    case Garage.create_measurement(measurement_params) do
+    case Garage.create_measurement(vehicle, measurement_params) do
       {:ok, measurement} ->
         conn
         |> put_flash(:info, "Measurement created successfully.")

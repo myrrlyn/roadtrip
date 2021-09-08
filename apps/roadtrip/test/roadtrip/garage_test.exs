@@ -83,20 +83,20 @@ defmodule Roadtrip.GarageTest do
     @invalid_attrs %{moment: nil, odometer: nil, vehicle_id: nil}
 
     test "list_measurements/0 returns all measurements", %{vehicle: vehicle} do
-      measurement = measurement_fixture(vehicle_id: vehicle.id)
+      measurement = measurement_fixture(vehicle)
       assert Garage.list_measurements() == [measurement]
       assert Garage.list_measurements(vehicle) == [measurement]
     end
 
     test "get_measurement!/1 returns the measurement with given id", %{vehicle: vehicle} do
-      measurement = measurement_fixture(vehicle_id: vehicle.id)
+      measurement = measurement_fixture(vehicle)
       assert Garage.get_measurement!(measurement.id) == measurement
     end
 
     test "create_measurement/1 with valid data creates a measurement", %{vehicle: vehicle} do
       valid_attrs = %{moment: ~U[2021-09-02 15:18:00Z], odometer: 42, vehicle_id: vehicle.id}
 
-      assert {:ok, %Measurement{} = measurement} = Garage.create_measurement(valid_attrs)
+      assert {:ok, %Measurement{} = measurement} = Garage.create_measurement(vehicle, valid_attrs)
 
       measurement = Repo.preload(measurement, :vehicle)
 
@@ -105,12 +105,12 @@ defmodule Roadtrip.GarageTest do
       assert measurement.vehicle == vehicle
     end
 
-    test "create_measurement/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Garage.create_measurement(@invalid_attrs)
+    test "create_measurement/1 with invalid data returns error changeset", %{vehicle: vehicle} do
+      assert {:error, %Ecto.Changeset{}} = Garage.create_measurement(vehicle, @invalid_attrs)
     end
 
     test "update_measurement/2 with valid data updates the measurement", %{vehicle: vehicle} do
-      measurement = measurement_fixture(vehicle_id: vehicle.id)
+      measurement = measurement_fixture(vehicle)
       update_attrs = %{moment: ~U[2021-09-03 15:18:00Z], odometer: 43, vehicle_id: vehicle.id}
 
       assert {:ok, %Measurement{} = measurement} =
@@ -121,7 +121,7 @@ defmodule Roadtrip.GarageTest do
     end
 
     test "update_measurement/2 with invalid data returns error changeset", %{vehicle: vehicle} do
-      measurement = measurement_fixture(vehicle_id: vehicle.id)
+      measurement = measurement_fixture(vehicle)
 
       assert {:error, %Ecto.Changeset{}} =
                Garage.update_measurement(measurement, %{@invalid_attrs | vehicle_id: vehicle.id})
@@ -130,13 +130,13 @@ defmodule Roadtrip.GarageTest do
     end
 
     test "delete_measurement/1 deletes the measurement", %{vehicle: vehicle} do
-      measurement = measurement_fixture(vehicle_id: vehicle.id)
+      measurement = measurement_fixture(vehicle)
       assert {:ok, %Measurement{}} = Garage.delete_measurement(measurement)
       assert_raise Ecto.NoResultsError, fn -> Garage.get_measurement!(measurement.id) end
     end
 
     test "change_measurement/1 returns a measurement changeset", %{vehicle: vehicle} do
-      measurement = measurement_fixture(vehicle_id: vehicle.id)
+      measurement = measurement_fixture(vehicle)
       assert %Ecto.Changeset{} = Garage.change_measurement(measurement)
     end
   end

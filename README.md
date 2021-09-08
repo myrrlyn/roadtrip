@@ -23,6 +23,7 @@ instance as appropriate.
 
 - The system can describe vehicles
 - The system can describe measurements for vehicles
+- The system can accept a CSV file of vehicle history for batch upload
 
 ## Roadmap
 

@@ -1,6 +1,9 @@
 defmodule Roadtrip.Garage do
   @moduledoc """
   The Garage context.
+
+  This contains general functions for working with Vehicle and Measurement
+  records.
   """
 
   import Ecto.Query, warn: false
@@ -59,6 +62,8 @@ defmodule Roadtrip.Garage do
   @doc """
   Creates a vehicle record in the database.
   """
+  @spec create_vehicle(%{(String.t() | atom()) => any()}) ::
+          {:ok, %Vehicle{}} | {:error, Ecto.Changeset.t()}
   def create_vehicle(attrs \\ %{}) do
     %Vehicle{}
     |> change_vehicle(attrs)
@@ -68,6 +73,8 @@ defmodule Roadtrip.Garage do
   @doc """
   Updates a vehicle record in the database.
   """
+  @spec update_vehicle(%Vehicle{}, %{(String.t() | any()) => any()}) ::
+          {:ok, %Vehicle{}} | {:error, Ecto.Changeset.t()}
   def update_vehicle(%Vehicle{} = vehicle, attrs) do
     vehicle
     |> change_vehicle(attrs)
@@ -77,11 +84,13 @@ defmodule Roadtrip.Garage do
   @doc """
   Deletes a vehicle, and all of its measurements, from the database.
   """
+  @spec delete_vehicle(%Vehicle{}) :: {:ok, %Vehicle{}} | {:error, Ecto.Changeset.t()}
   def delete_vehicle(%Vehicle{} = vehicle), do: vehicle |> delete_measurements() |> Repo.delete()
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking vehicle changes.
   """
+  @spec change_vehicle(%Vehicle{}) :: Ecto.Changeset.t()
   def change_vehicle(%Vehicle{} = vehicle, attrs \\ %{}), do: vehicle |> Vehicle.changeset(attrs)
 
   ##############################################################################
@@ -108,6 +117,10 @@ defmodule Roadtrip.Garage do
     |> Repo.all()
   end
 
+  @doc """
+  Creates a database query for all Measurements associated with a Vehicle.
+  """
+  @spec query_measurements(%Vehicle{}) :: Ecto.Query.t()
   def query_measurements(%Vehicle{id: vid}) do
     Measurement |> where(vehicle_id: ^vid) |> order_by(asc: :odometer, asc: :moment)
   end
@@ -120,6 +133,11 @@ defmodule Roadtrip.Garage do
   @spec get_measurement!(integer()) :: %Measurement{}
   def get_measurement!(id), do: Measurement |> Repo.get!(id)
 
+  @doc """
+  Gets the measurement for a given `Vehicle` and moment.
+
+  Raises `Ecto.NoResultsError` if the Measurement does not exist.
+  """
   @spec get_measurement!(%Vehicle{}, DateTime.t()) :: %Measurement{}
   def get_measurement!(%Vehicle{} = vehicle, moment) do
     vehicle |> query_measurements() |> Repo.get_by!(moment: moment)
@@ -128,8 +146,11 @@ defmodule Roadtrip.Garage do
   @doc """
   Creates a measurement.
   """
-  def create_measurement(attrs \\ %{}) do
-    %Measurement{}
+  @spec create_measurement(%Vehicle{}, %{(String.t() | atom()) => any()}) ::
+          {:ok, %Measurement{}} | {:error, Ecto.Changeset.t()}
+  def create_measurement(%Vehicle{} = vehicle, attrs \\ %{}) do
+    vehicle
+    |> Ecto.build_assoc(:measurements)
     |> Measurement.changeset(attrs)
     |> Repo.insert()
   end
@@ -147,7 +168,8 @@ defmodule Roadtrip.Garage do
   - any `Enumerable` that yields `%{moment: DateTime.t(), odometer: integer()}`
   - the `Vehicle` record that owns the batch of measurements
   """
-  @spec batch_create_measurements(Enumerable.t(), %Vehicle{}) :: {nil, any}
+  @spec batch_create_measurements(Enumerable.t(), %Vehicle{}) ::
+          {integer(), [%Measurement{}] | nil}
   def batch_create_measurements(seq, %Vehicle{id: vid}) do
     now = DateTime.utc_now() |> DateTime.to_naive()
 
@@ -167,6 +189,8 @@ defmodule Roadtrip.Garage do
   @doc """
   Updates a measurement.
   """
+  @spec update_measurement(%Measurement{}, %{(String.t() | atom()) => any()}) ::
+          {:ok, %Measurement{}} | {:error, Ecto.Changeset.t()}
   def update_measurement(%Measurement{} = measurement, attrs) do
     measurement
     |> Measurement.changeset(attrs)
@@ -176,11 +200,13 @@ defmodule Roadtrip.Garage do
   @doc """
   Deletes a measurement.
   """
+  @spec delete_measurement(%Measurement{}) :: {:ok, %Measurement{}}
   def delete_measurement(%Measurement{} = measurement), do: measurement |> Repo.delete()
 
   @doc """
   Deletes all measurements associated with a `Vehicle`.
   """
+  @spec delete_measurements(%Vehicle{}) :: %Vehicle{}
   def delete_measurements(%Vehicle{id: vid} = vehicle) do
     Measurement |> where(vehicle_id: ^vid) |> Repo.delete_all()
     vehicle
@@ -189,6 +215,8 @@ defmodule Roadtrip.Garage do
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking measurement changes.
   """
+  @spec change_measurement(%Measurement{}, %{(String.t() | atom()) => any()}) ::
+          Ecto.Changeset.t()
   def change_measurement(%Measurement{} = measurement, attrs \\ %{}),
     do: measurement |> Measurement.changeset(attrs)
 end

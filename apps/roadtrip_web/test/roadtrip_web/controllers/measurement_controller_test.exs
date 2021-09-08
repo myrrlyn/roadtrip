@@ -118,7 +118,7 @@ defmodule RoadtripWeb.MeasurementControllerTest do
   end
 
   defp create_measurement(%{vehicle: vehicle}) do
-    measurement = measurement_fixture(vehicle_id: vehicle.id)
+    measurement = measurement_fixture(vehicle)
     %{measurement: measurement}
   end
 end
