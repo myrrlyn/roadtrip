@@ -8,7 +8,7 @@ defmodule Roadtrip.Garage do
 
   import Ecto.Query, warn: false
   alias Roadtrip.Repo
-  alias Roadtrip.Garage.{Measurement, Vehicle}
+  alias Roadtrip.Garage.{Measurement, Vehicle, Refuel}
 
   ##############################################################################
 
@@ -145,6 +145,11 @@ defmodule Roadtrip.Garage do
 
   @doc """
   Creates a measurement.
+
+  ## Parameters
+
+  - `vehicle`: A `Vehicle` record to which the created `Measurement` will be
+    attached. It must be persisted in the database and possess a database ID.
   """
   @spec create_measurement(%Vehicle{}, %{(String.t() | atom()) => any()}) ::
           {:ok, %Measurement{}} | {:error, Ecto.Changeset.t()}
@@ -219,4 +224,43 @@ defmodule Roadtrip.Garage do
           Ecto.Changeset.t()
   def change_measurement(%Measurement{} = measurement, attrs \\ %{}),
     do: measurement |> Measurement.changeset(attrs)
+
+  ##############################################################################
+
+  # Refuel events
+
+  @doc """
+  Queries the database for only Measurements that have an associated refuel.
+
+  ## Parameters
+
+  ## Returns
+
+  A database query that will, when executed, look up only the refueling
+  mesaruements for the given vehicle.
+  """
+  def refuels(%Vehicle{} = vehicle), do:
+    vehicle
+    |> query_measurements()
+    |> where([m], fragment("? IS NOT NULL", m.price) and fragment("? IS NOT NULL", m.volume))
+
+  @doc """
+  Sums the Refuel events in a list of Measurements.
+
+  ## Returns
+
+  A tuple of `{total_volume, total_cost}`.
+  """
+  @spec refuel_sum(Enumerable.t()) :: {Decimal.t(), Decimal.t()}
+  def refuel_sum(measurements) do
+    measurements
+    |> Stream.map(&Measurement.refuel/1)
+    |> Stream.reject(&is_nil/1)
+    |> Stream.map(fn %Refuel{volume: volume} = refuel ->
+      {volume, refuel |> Refuel.total_cost()}
+    end)
+    |> Enum.reduce({Decimal.new(0), Decimal.new(0)}, fn {vol, cost}, {accum_v, accum_c} ->
+      {Decimal.add(vol, accum_v), Decimal.add(cost, accum_c)}
+    end)
+  end
 end

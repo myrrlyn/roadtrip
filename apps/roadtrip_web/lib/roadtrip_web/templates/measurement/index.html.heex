@@ -7,15 +7,27 @@
     <tr>
       <th>Timestamp</th>
       <th>Odometer</th>
+      <th>Fuel Volume</th>
+      <th>Fuel Cost</th>
 
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <%= for measurement <- @measurements do %>
+    <%= for measurement <- @measurements |> Enum.reverse do %>
       <tr>
         <td><%= measurement |> Roadtrip.Garage.Measurement.show_moment() %></td>
         <td class="text-right"><%= measurement |> Roadtrip.Garage.Measurement.show_odometer() %></td>
+        <%= if rf = measurement |> Roadtrip.Garage.Measurement.refuel() do %>
+          <td class="text-right">
+            <%= rf.volume |> Decimal.round(3) %>
+          </td>
+          <td class="text-right">
+            <%= rf |> Roadtrip.Garage.Refuel.total_cost() |> Number.Currency.number_to_currency(precision: 2) %>
+          </td>
+        <% else %>
+          <td></td><td></td>
+        <% end %>
 
         <td>
           <span><%= link "Show", to: @conn |> Routes.vehicle_measurement_path(:show, @vehicle, measurement) %></span>
@@ -25,6 +37,20 @@
       </tr>
     <% end %>
   </tbody>
+  <tfoot>
+    <tr>
+      <% {vol, cost} = Roadtrip.Garage.refuel_sum(@measurements) %>
+      <th>Total Costs</th>
+      <th></th>
+      <th class="text-right">
+        <%= vol |> Decimal.round(3) %>
+      </th>
+      <th class="text-right">
+        <%= cost |> Number.Currency.number_to_currency() %>
+      </th>
+      <th></th>
+    </tr>
+  </tfoot>
 </table>
 
 <span><%= link "New Measurement", to: @conn |> Routes.vehicle_measurement_path(:new, @vehicle) %></span>

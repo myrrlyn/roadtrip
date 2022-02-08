@@ -6,14 +6,49 @@
   <% end %>
 
   <%= label f, :odometer %>
-  <%= number_input f, :odometer, pattern: "\\d*" %>
+  <%= number_input f, :odometer, inputmode: "decimal", pattern: "[0-9]+(\\.[0-9])?" %>
   <%= error_tag f, :odometer %>
 
   <%= label f, :moment %>
-  <%= datetime_select f, :moment %>
+  <p>
+    Use your local time and select your timezone. The server will translate
+    accordingly.
+  </p>
+  <% now = DateTime.utc_now() %>
+  <%= datetime_select f, :moment, year: [options: 1954 .. now.year + 1, selected: now.year], month: [selected: now.month], day: [selected: now.day], hour: [selected: now.hour], minute: [selected: now.minute] %>
   <%= error_tag f, :moment %>
 
+  <%= label f, :tz, "Timezone" %>
+  <%= RoadtripWeb.tz_select f, :tz, selected: "Etc/UTC" %>
+  <%= error_tag f, :tz %>
+
+  <div id="refuel" class="form-group">
+    <h2>Refueling</h2>
+    <div class="form-group refuel-input">
+      <%= label f, :price, "Fuel Price" %>
+      <%= number_input f, :price, inputmode: "decimal", pattern: "[0-9]+\\.[0-9]{2}9", step: "0.001" %>
+      <%= error_tag f, :price %>
+    </div>
+
+    <div class="form-group refuel-input">
+      <%= label f, :volume, "Fuel Volume" %>
+      <%= number_input f, :volume, inputmode: "decimal", pattern: "[0-9]+\\.[0-9]{3}", step: "0.001" %>
+      <%= error_tag f, :volume %>
+    </div>
+
+    <div class="form-group noscript">
+      <%= label f, :use_refuel, "Submit refuel?", style: "display: inline-block;" %>
+      <%= checkbox f, :use_refuel %>
+    </div>
+  </div>
   <div>
     <%= submit "Save" %>
   </div>
 </.form>
+
+<style type="text/css">
+  .refuel-input {
+    width: calc(50% - 4px);
+    display: inline-block;
+  }
+</style>

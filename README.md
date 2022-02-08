@@ -24,13 +24,17 @@ instance as appropriate.
 - The system can describe vehicles
 - The system can describe measurements for vehicles
 - The system can accept a CSV file of vehicle history for batch upload
+- Refuel events can be tracked. Currently they support no advanced queries; this
+  will be extended in the future. They also assume USD/gallons, because that’s
+  what I use; I may eventually add support for local currency, litres, or
+  electrical charge.
+- Rudimentary CSV parsing from my existing logbooks.
 
 ## Roadmap
 
-1. Extend `Measurement` with `Refuel` and `Maintenance` attachments
+1. Extend `Measurement` with `Maintenance` attachments
 1. Extend `Measurement` with location attachments
 1. Create query systems for `Measurements`, like fuel or maintenance forecast
-1. Create CSV import/export behavior.
 1. Add `Driver`s who can take ownership of `Vehicle`s
 1. Implement permissions so that only owning `Driver`s can write to a `Vehicle`,
    and each `Vehicle` can be made publicly readable or opaque.

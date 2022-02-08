@@ -10,7 +10,7 @@ defmodule RoadtripWeb.MeasurementControllerTest do
   @invalid_attrs %{moment: nil, odometer: nil, vehicle_id: nil}
 
   describe "index" do
-    setup [:create_vehicle]
+    setup [:create_vehicle, :create_measurement]
 
     test "lists all measurements", %{conn: conn, vehicle: vehicle} do
       conn = get(conn, Routes.vehicle_measurement_path(conn, :index, vehicle))

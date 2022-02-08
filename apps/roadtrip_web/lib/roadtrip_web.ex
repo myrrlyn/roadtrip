@@ -76,6 +76,28 @@ defmodule RoadtripWeb do
     end
   end
 
+  @doc """
+  Creates an HTML `<select>` element with all of the available timezone
+  identifiers.
+  """
+  def tz_select(form, field, opts \\ []) do
+    groups = Tzdata.zone_lists_grouped()
+
+    renamed = [
+      "Greenwich Offsets": groups[:etcetera],
+      Africa: groups[:africa],
+      Antarctica: groups[:antarctica],
+      Asia: groups[:asia],
+      Australasia: groups[:australasia],
+      Europe: groups[:europe],
+      "North America": groups[:northamerica],
+      "South America": groups[:southamerica],
+      Renamed: groups[:backward]
+    ]
+
+    Phoenix.HTML.Form.select(form, field, renamed, opts)
+  end
+
   defp view_helpers do
     quote do
       # Use all HTML functionality (forms, tags, etc)

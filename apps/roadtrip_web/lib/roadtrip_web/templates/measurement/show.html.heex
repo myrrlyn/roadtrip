@@ -17,6 +17,13 @@
     <%= @measurement |> Roadtrip.Garage.Measurement.show_odometer() %>
   </li>
 
+  <%= if rf = @measurement |> Roadtrip.Garage.Measurement.refuel() do %>
+    <li>
+      <strong>Refuel:</strong>
+      <%= rf |> Roadtrip.Garage.Refuel.show() %>
+    </li>
+  <% end %>
+
 </ul>
 
 <span><%= link "Edit", to: @conn |> Routes.vehicle_measurement_path(:edit, @vehicle, @measurement) %></span> |
